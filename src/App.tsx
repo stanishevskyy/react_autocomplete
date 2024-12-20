@@ -1,4 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import { debounce } from 'lodash';
+import React, { useCallback, useMemo, useState } from 'react';
+
 import './App.scss';
 import { Autocomplete } from './components/Autocomplete';
 
@@ -7,19 +9,23 @@ import { Person } from './types/Person';
 
 export const App: React.FC = () => {
   const [value, setValue] = useState('');
+  const [appliedQuery, setAppliedQuery] = useState('');
   const [focus, setFocus] = useState(false);
   const [selectedUser, setSelectedUser] = useState<Person | null>(null);
 
+  const applyQuery = useCallback(debounce(setAppliedQuery, 5300), []);
+
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
+    applyQuery(event.target.value);
     setSelectedUser(null);
   };
 
   const filteredUser = useMemo(() => {
     return peopleFromServer.filter(el =>
-      el.name.toLowerCase().includes(value.toLowerCase()),
+      el.name.toLowerCase().includes(appliedQuery.toLowerCase()),
     );
-  }, [peopleFromServer, value]);
+  }, [appliedQuery]);
 
   return (
     <div className="container">
