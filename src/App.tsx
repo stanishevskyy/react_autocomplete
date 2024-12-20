@@ -13,7 +13,7 @@ export const App: React.FC = () => {
   const [focus, setFocus] = useState(false);
   const [selectedUser, setSelectedUser] = useState<Person | null>(null);
 
-  const applyQuery = useCallback(debounce(setAppliedQuery, 5300), []);
+  const applyQuery = useCallback(debounce(setAppliedQuery, 300), []);
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
